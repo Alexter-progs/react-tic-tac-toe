@@ -7,6 +7,7 @@
     "dotenv": "^5.0.0",
     "express": "^4.16.2",
     "morgan": "^1.9.0",
+    "pm2": "^2.9.3",
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
     "react-scripts": "1.1.0",
@@ -15,9 +16,21 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "server": "node server.js",
+    "server": "pm2 start server.js",
+    "server-dev": "nodemon start server.js",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
+  },
+  "devDependencies": {
+    "nodemon": "^1.14.12"
+  },
+  "nodemonConfig": {
+    "watch": [
+      "server.js"
+    ],
+    "env": {
+      "NODE_ENV": "development"
+    }
   }
 }
