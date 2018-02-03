@@ -23,5 +23,5 @@ io.on('connection', (client) => {
 });
 
 http.listen(PORT, () => {
-  console.log('listening on *:3001');
+  console.log(`Listening on port ${PORT}`);
 });
