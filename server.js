@@ -3,6 +3,8 @@ const http = require('http').Server(app);
 const io = require('socket.io')(http);
 const morgan = require('morgan')
 
+const PORT = process.env.PORT || 3001;
+
 app.use(morgan('combined'))
 
 app.get('/', (req, res) => {
@@ -20,6 +22,6 @@ io.on('connection', (client) => {
   });
 });
 
-http.listen(3001, () => {
+http.listen(PORT, () => {
   console.log('listening on *:3001');
 });
