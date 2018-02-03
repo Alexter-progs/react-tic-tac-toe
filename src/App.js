@@ -3,7 +3,7 @@ import logo from './logo.svg';
 import './App.css';
 import openSocket from 'socket.io-client';
 
-const socket = openSocket('http://localhost:3001');
+const socket = openSocket(process.env.REACT_APP_HOST_URL);
 function subscribeToTimer(cb) {
   socket.on('timer', timestamp => cb(null, timestamp));
   socket.emit('subscribeToTimer', 1000);
@@ -16,7 +16,7 @@ class App extends Component {
 
   constructor() {
     super();
-    
+
     subscribeToTimer((err, timestamp) => this.setState({ 
       timestamp 
     }))
@@ -33,6 +33,7 @@ class App extends Component {
           To get started, edit <code>src/App.js</code> and save to reload.
         </p>
         <p>{this.state.timestamp}</p>
+        <p>{process.env.REACT_APP_HOST_URL}</p>
       </div>
     );
   }

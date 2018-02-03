@@ -1,9 +1,15 @@
+const dotenv = require('dotenv');
+const path = require('path');
 const app = require('express')();
 const http = require('http').Server(app);
 const io = require('socket.io')(http);
 const morgan = require('morgan')
 
-const PORT = process.env.PORT || 3001;
+const config = dotenv.config({
+    path: process.env.NODE_ENV === 'development' ? path.resolve(process.cwd(), '.env.development') : path.resolve(process.cwd(), '.env.production')
+});
+
+const PORT = config.parsed.SERVER_PORT || 3001;
 
 app.use(morgan('combined'))
 
