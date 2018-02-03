@@ -2,11 +2,11 @@ var app = require('express')();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
 
-app.get('/', function(req, res){
+app.get('/', (req, res) => {
   res.sendFile(__dirname + '/index.html');
 });
 
-io.on('connection', function(client){
+io.on('connection', (client) => {
   console.log('a user connected');
 
   client.on('subscribeToTimer', (interval) => {
@@ -17,6 +17,6 @@ io.on('connection', function(client){
   });
 });
 
-http.listen(3001, function(){
+http.listen(3001, () => {
   console.log('listening on *:3001');
 });
