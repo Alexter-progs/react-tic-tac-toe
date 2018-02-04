@@ -14,7 +14,7 @@ const PORT = config.parsed.SERVER_PORT || 3001;
 app.use(morgan('combined'))
 
 app.get('/', (req, res) => {
-  res.sendFile(__dirname + '/index.html');
+  res.sendFile(path.resolve(__dirname, '..', 'build', 'index.html'));
 });
 
 io.on('connection', (client) => {
@@ -31,3 +31,5 @@ io.on('connection', (client) => {
 http.listen(PORT, () => {
   console.log(`Listening on port ${PORT}`);
 });
+
+module.exports.io = io;
