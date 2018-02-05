@@ -1,12 +1,9 @@
 import React, { Component } from 'react';
+import Chat from './components/Chat/Chat';
 import './App.css';
 import openSocket from 'socket.io-client';
 
 const socket = openSocket(process.env.REACT_APP_HOST_URL);
-function subscribeToTimer(cb) {
-  socket.on('timer', timestamp => cb(null, timestamp));
-  socket.emit('subscribeToTimer', 1000);
-};
 
 class App extends Component {
   state = {
@@ -15,16 +12,13 @@ class App extends Component {
 
   constructor() {
     super();
-
-    subscribeToTimer((err, timestamp) => this.setState({ 
-      timestamp 
-    }))
   }
 
   render() {
     return (
-      <div>
-        Hello
+      <div className="app-grid">
+        <Chat className="chat"/>
+        <div className="game">Game</div>
       </div>
     );
   }

@@ -1,0 +1,34 @@
+.chat-messages {
+    display: grid;
+    align-self: end;
+    
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+.chat-messages p {
+    margin-left: 10px;
+    margin-bottom: 0px;
+    margin-top: 0px;
+}
+
+.chat-input {
+    display: grid;
+    grid-template-columns: 70% 30%;
+    align-self: center;
+}
+
+.message-wrapper {
+    margin-left: 10px;
+}
+
+.message-wrapper input {
+    width: 100%;
+}
+
+.chat-send {
+    justify-self: end;
+    margin-right: 10px;
+    
+    border-radius: 25%;
+}

@@ -1,0 +1,19 @@
+.app-grid {
+  display: grid;
+  grid-template-areas: 
+  "game"
+  "chat";
+}
+
+.chat {
+  grid-area: chat;
+  align-self: end;
+
+  display: grid;
+  grid-template-rows: 10fr 1fr;
+}
+
+.game {
+  justify-self: center;
+  grid-area: game;
+}
