@@ -15,8 +15,6 @@ class Game extends Component {
             }))
         })
 
-        console.log(props);
-
         this.state = {
             grid: [
                 [0, 0, 0],
@@ -38,10 +36,12 @@ class Game extends Component {
     handleStep = (x,y) => {
         const mark = this.props.isFirst ? 'X' : 'O';
         const { isStepLocked } = this.state;
-        console.log(isStepLocked);
-        if(!isStepLocked) {
+
+        if(!isStepLocked && this.isNotAlreadyMarked(x, y)) {
+            console.log(`Steping: ${x}, ${y}`);
+            
             socket.emit('step', { x, y }, () => {
-                console.log(`Steping: ${x}, ${y}`)
+                console.log(`Indeed Steped: ${x}, ${y}`)
             });
 
             this.updateGrid(x, y, false);
@@ -52,6 +52,10 @@ class Game extends Component {
         }
     }
 
+    isNotAlreadyMarked = (x, y) => {
+        return this.state.grid[x][y] === 0;
+    }
+
     updateGrid = (x, y, isEnemy) => {
         const { grid } = this.state;
         let updatedGrid = grid.slice();
@@ -59,8 +63,6 @@ class Game extends Component {
 
         nestedArr[y] = isEnemy ? -1 : 1;
         updatedGrid[x] = nestedArr;
-
-        console.log(updatedGrid);
 
         this.setState((state) => ({
             grid: updatedGrid
@@ -72,8 +74,6 @@ class Game extends Component {
         const mark = this.props.isFirst ? 'X' : 'O';
         const enemyMark = mark === 'X' ? 'O' : 'X';
         const blank = '';
-
-        console.log(grid);
 
         return (
             <div className="game">
