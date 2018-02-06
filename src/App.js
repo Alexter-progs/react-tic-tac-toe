@@ -6,6 +6,8 @@ import uuid from 'uuid';
 import { getRoomFromUrl } from './utils/index'
 import { socket, onPlayerJoined } from './api';
 
+const HOST_URL = process.env.REACT_APP_HOST_URL + process.env.REACT_APP_DEV_SERVER_PORT
+
 class App extends Component {
   constructor() {
     super();
@@ -17,7 +19,7 @@ class App extends Component {
 
     this.state = {
       shouldJoinRoom,
-      connectionURL: `${process.env.REACT_APP_HOST_URL}${process.env.REACT_APP_DEV_SERVER_PORT}/chat/${roomId}`,
+      connectionURL: `${HOST_URL}/chat/${roomId}`,
       roomId
     }
   }
@@ -34,8 +36,12 @@ class App extends Component {
     socket.emit('join', roomId, (roomId) => {
       console.log(roomId);
       if(roomId === 'error') {
+        const newRoomId = uuid.v4();
+
         this.setState({
-          shouldJoinRoom: false
+          shouldJoinRoom: false,
+          connectionURL: `${HOST_URL}/chat/${newRoomId}`,
+          roomId: newRoomId
         })
       } else {
         console.log(`I joined the room #${roomId}`);
