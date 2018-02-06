@@ -64,7 +64,6 @@ class Chat extends Component {
   }
 
   render() {
-    const { className: chatClassName } = this.props;
     const { messages } = this.state;
     
 
