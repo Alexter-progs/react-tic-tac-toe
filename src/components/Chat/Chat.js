@@ -69,7 +69,7 @@ class Chat extends Component {
     
 
     return (
-      <div className={chatClassName}>
+      <div className="chat">
         <div className="chat-messages">
           {messages.map((message, index) => (
             <span key={index}>

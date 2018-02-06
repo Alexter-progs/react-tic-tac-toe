@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import Chat from './components/Chat/Chat';
+import Game from './components/Game/Game';
 import './App.css';
 import uuid from 'uuid';
 
@@ -62,10 +63,10 @@ class App extends Component {
     const { shouldJoinRoom, connectionURL } = this.state;
 
     return (
-      shouldJoinRoom ? (
+      true ? (
         <div className="app-grid">
           <Chat className="chat"/>
-          <div className="game">Game</div>
+          <Game className="game"/>
         </div>
       ) : (
         <div>Give this URL to your friend to play toogether: <a href={connectionURL}>{connectionURL}</a></div>
