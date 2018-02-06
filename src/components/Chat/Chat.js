@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import './Chat.css';
 
+import { onChatMessage, socket } from '../../api'
+
 class Chat extends Component {
   state = {
     message: '',
@@ -9,6 +11,11 @@ class Chat extends Component {
 
   constructor() {
     super();
+
+    onChatMessage((message) => {
+      console.log(`Received message: ${message}`)
+      this.updateMessages(message);
+    })
   }
 
   messageChange = (event) => {
@@ -26,22 +33,29 @@ class Chat extends Component {
   }
 
   messageSubmit = () => {
-    const { message, messages } = this.state;
-  
-    if(message.length > 0) { 
-      let updatedMessages = messages.slice();
-      updatedMessages.push(message);
+    const { message } = this.state;
 
-      this.reverse(updatedMessages);
-  
-      this.setState(() => ({
-        messages: updatedMessages,
-        message: ''
-      }));
+    if(message.length > 0) {
+      this.updateMessages(message);
+      socket.emit('broadcastMessage', message);
     }
   }
 
-  reverse = (arr) => {
+  updateMessages = (message) => {
+    const { messages } = this.state;
+
+    let updatedMessages = messages.slice();
+    updatedMessages.push(message);
+
+    this.pop(updatedMessages);
+
+    this.setState(() => ({
+      messages: updatedMessages,
+      message: ''
+    }));
+  }
+
+  pop = (arr) => {
     if(arr.length > 10) {
       arr.reverse();
       arr.pop();
