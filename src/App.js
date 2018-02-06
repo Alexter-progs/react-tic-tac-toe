@@ -65,8 +65,8 @@ class App extends Component {
     return (
       true ? (
         <div className="app-grid">
-          <Chat className="chat"/>
-          <Game className="game"/>
+          <Chat/>
+          <Game/>
         </div>
       ) : (
         <div>Give this URL to your friend to play toogether: <a href={connectionURL}>{connectionURL}</a></div>
