@@ -4,27 +4,38 @@ import './App.css';
 import uuid from 'uuid';
 
 import { getRoomFromUrl } from './utils/index'
-import { joinRoom, onPlayerJoined } from './api';
+import { socket, onPlayerJoined } from './api';
 
 class App extends Component {
   constructor() {
     super();
+
+    let roomId = getRoomFromUrl();
+    const shouldJoinRoom = roomId.length !== 0 ? true : false;
+
+    roomId = shouldJoinRoom ? roomId : uuid.v4();
+
     this.state = {
-      joinedRoom: getRoomFromUrl().length !== 0 ? true : false,
-      connectionURL: `${process.env.REACT_APP_HOST_URL}${process.env.REACT_APP_DEV_SERVER_PORT}/chat/${uuid.v4()}`
+      shouldJoinRoom,
+      connectionURL: `${process.env.REACT_APP_HOST_URL}${process.env.REACT_APP_DEV_SERVER_PORT}/chat/${roomId}`,
+      roomId
     }
   }
 
   state = {
-    joinedRoom: false
+    shouldJoinRoom: false,
+    connectionURL: null,
+    roomId: null
   }
 
   componentWillMount() {
-    joinRoom((roomId) => {
+    const { roomId } = this.state;
+
+    socket.emit('join', roomId, (roomId) => {
       console.log(roomId);
       if(roomId === 'error') {
         this.setState({
-          joinedRoom: false
+          shouldJoinRoom: false
         })
       } else {
         console.log(`I joined the room #${roomId}`);
@@ -33,15 +44,19 @@ class App extends Component {
     });
 
     onPlayerJoined(() => {
-      console.log('Player joined');
+      console.log('Second player is joined');
+
+      this.setState({
+        shouldJoinRoom: true
+      })
     })
   }
 
   render() {
-    const { joinedRoom, connectionURL } = this.state;
+    const { shouldJoinRoom, connectionURL } = this.state;
 
     return (
-      joinedRoom ? (
+      shouldJoinRoom ? (
         <div className="app-grid">
           <Chat className="chat"/>
           <div className="game">Game</div>

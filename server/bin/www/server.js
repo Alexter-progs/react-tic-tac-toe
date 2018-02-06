@@ -21,12 +21,21 @@ io.on('connection',(socket) => {
 
     connections[socket.id] = { roomId: null };
 
-    socket.on('join', onJoin.bind({ socket }));
+    socket.on('join', (room, cb) => {
+        if(!isRoomFull(room)) {
+            socket.join(room, (err) => {
+                if(!err) {
+                    connections[socket.id].roomId = room;
+                    socket.broadcast.to(room).emit('playerJoined');
+                }
+            });
+            cb(room);
+        } else {
+            cb('error')
+        }            
+    });
 
-    socket.on('broadcastMessage', message => {
-        console.log(`Broadcasting message: ${message}`)
-        socket.broadcast.to(connections[socket.id].roomId).emit('chatMessage', message);
-    })
+    socket.on('broadcastMessage', onBroadcastMessage.bind({ socket} ));
 
     socket.on('disconnect', onDisconnect);
 });
@@ -35,18 +44,11 @@ function onDisconnect(reason) {
     console.log('User disconnected. Reason: ', reason)
 }
 
-function onJoin(room, cb) {
-    if(!isRoomFull(room)) {
-        this.socket.join(room, (err) => {
-            if(!err) {
-                connections[this.socket.id].roomId = room;
-                this.socket.broadcast.to(room).emit('playerJoined');
-            }
-        });
-        cb(room);
-    } else {
-        cb('error')
-    }            
+function onBroadcastMessage(message) {
+    console.log(`Broadcasting message: ${message}`)
+
+    const room = connections[this.socket.id].roomId;
+    this.socket.broadcast.to(room).emit('chatMessage', message);
 }
 
 function isRoomFull(room) {
