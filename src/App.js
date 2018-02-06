@@ -21,7 +21,8 @@ class App extends Component {
     this.state = {
       shouldJoinRoom,
       connectionURL: `${HOST_URL}/chat/${roomId}`,
-      roomId
+      roomId,
+      isFirst: false
     }
   }
 
@@ -54,19 +55,22 @@ class App extends Component {
       console.log('Second player is joined');
 
       this.setState({
-        shouldJoinRoom: true
+        shouldJoinRoom: true,
+        isFirst: true
       })
     })
   }
 
   render() {
-    const { shouldJoinRoom, connectionURL } = this.state;
+    const { shouldJoinRoom, connectionURL, isFirst } = this.state;
+
+    console.log(isFirst);
 
     return (
       true ? (
         <div className="app-grid">
           <Chat/>
-          <Game/>
+          <Game isFirst={isFirst}/>
         </div>
       ) : (
         <div>Give this URL to your friend to play toogether: <a href={connectionURL}>{connectionURL}</a></div>

@@ -15,4 +15,8 @@ function onChatMessage(cb) {
     socket.on('chatMessage', cb)
 }
 
-export { onChatMessage, onConnect, onPlayerJoined, socket };
+function onEnemyStep(cb) {
+    socket.on('enemyStep', cb);
+}
+
+export { onChatMessage, onConnect, onEnemyStep, onPlayerJoined, socket };
