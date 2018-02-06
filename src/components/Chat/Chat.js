@@ -14,7 +14,7 @@ class Chat extends Component {
 
     onChatMessage((message) => {
       console.log(`Received message: ${message}`)
-      this.updateMessages(message);
+      this.updateMessages({ text: message, user: 'Oponent' });
     })
   }
 
@@ -36,7 +36,7 @@ class Chat extends Component {
     const { message } = this.state;
 
     if(message.length > 0) {
-      this.updateMessages(message);
+      this.updateMessages({ text: message, user: 'Me' });
       socket.emit('broadcastMessage', message);
     }
   }
@@ -66,13 +66,14 @@ class Chat extends Component {
   render() {
     const { className: chatClassName } = this.props;
     const { messages } = this.state;
+    
 
     return (
       <div className={chatClassName}>
         <div className="chat-messages">
           {messages.map((message, index) => (
             <span key={index}>
-              <p>{message}</p>
+              <p>{message.user}: {message.text}</p>
             </span>
           ))}
         </div>
