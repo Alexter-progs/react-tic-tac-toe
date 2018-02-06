@@ -35,21 +35,25 @@ io.on('connection',(socket) => {
         }            
     });
 
-    socket.on('broadcastMessage', onBroadcastMessage.bind({ socket} ));
+    socket.on('broadcastMessage', (message) => {
+        console.log(`Broadcasting message: ${message}`)
 
-    socket.on('disconnect', onDisconnect);
+        const room = connections[socket.id].roomId;
+        socket.broadcast.to(room).emit('chatMessage', message);
+    });
+
+    socket.on('step', ({x, y}, cb) => {
+        console.log(`Broadcasting step: ${x}, ${y}`);
+
+        const room = connections[socket.id].roomId;
+        socket.broadcast.to(room).emit('enemyStep', { x, y});
+        cb();
+    })
+
+    socket.on('disconnect', (reason) => {
+        console.log('User disconnected. Reason: ', reason)
+    });
 });
-
-function onDisconnect(reason) {
-    console.log('User disconnected. Reason: ', reason)
-}
-
-function onBroadcastMessage(message) {
-    console.log(`Broadcasting message: ${message}`)
-
-    const room = connections[this.socket.id].roomId;
-    this.socket.broadcast.to(room).emit('chatMessage', message);
-}
 
 function isRoomFull(room) {
     let count = 0;
