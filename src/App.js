@@ -7,7 +7,7 @@ import uuid from 'uuid';
 import { getRoomFromUrl } from './utils/index'
 import { socket, onPlayerJoined, onGameOver, onOponentDisconnect } from './api';
 
-const HOST_URL = process.env.REACT_APP_HOST_URL + process.env.REACT_APP_DEV_SERVER_PORT
+const HOST_URL = process.env.REACT_APP_HOST_URL + process.env.REACT_APP_DEV_SERVER_PORT || '';
 
 class App extends Component {
   constructor() {
