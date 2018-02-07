@@ -119,7 +119,7 @@ class Game extends Component {
                     { isOponentDisconnected ? (
                         <p>Your oponent disconnected</p>
                     ) : (
-                        <p>{ isTie ? 'Draw' : isWinner ? 'You won' : 'You lost' }</p>
+                        <p>{ isTie ? 'Tie' : isWinner ? 'You won' : 'You lost' }</p>
                     )}
                 </div>
             )
