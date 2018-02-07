@@ -16,9 +16,11 @@ class Game extends Component {
         })
 
         onGameOver(({ result, lastMove}) => {
-            const me = this.state.isCreator ? 'Creator' : 'JoinedUser';
+            const me = this.props.isFirst ? 'Creator' : 'JoinedUser';
             const isTie = result === 'Tie';
             const isWinner = isTie ? false : me === result ? true : false
+
+            console.log(`Me: ${me}. result === Tie: ${isTie}. isWinner: ${isWinner}`);
 
             this.updateGrid(lastMove, true);
             this.setState({
@@ -43,7 +45,6 @@ class Game extends Component {
         if(nextProp.isFirst !== this.props.isFirst) {
             this.setState(({
                 isStepLocked: nextProp.isFirst ? false : true,
-                isCreator: nextProp.isFirst ? true : false
             }));
         }
     }

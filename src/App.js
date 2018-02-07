@@ -72,7 +72,7 @@ class App extends Component {
     console.log(isFirst);
 
     return (
-      true ? (
+      shouldJoinRoom ? (
         <div className="app-grid">
           <Chat/>
           <Game isFirst={isFirst}/>
