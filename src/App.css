@@ -19,3 +19,31 @@
   font-size: 50px;
   color: #272727;
 }
+
+.main-page {
+  display: grid;
+  grid-template-columns: 1fr 10fr 1fr;
+  grid-template-rows: 1fr 1fr 1fr;
+}
+
+.content {
+  grid-area: content;
+
+  color: #272727;
+
+  text-align: center;
+  grid-column: 2/3;
+  grid-row: 2/3;
+  align-self: center;
+  justify-self: center;
+  font-size: 35px;
+}
+
+.content p {
+  border: 5px #272727 solid;
+  color: white;
+  background: #4C2C72;
+  padding: 50px;
+}
+
+

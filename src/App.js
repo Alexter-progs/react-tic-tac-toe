@@ -100,7 +100,11 @@ class App extends Component {
           }
         </div>
       ) : (
-        <div>Give this URL to your friend to play toogether: <a href={connectionURL}>{connectionURL}</a></div>
+        <div class="main-page">
+          <span className="content">Give this URL to your friend to play toogether
+            <p>{connectionURL}</p>
+          </span>
+        </div>
       )
     );
   }
