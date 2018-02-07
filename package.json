@@ -17,8 +17,8 @@
   },
   "scripts": {
     "client-dev": "react-scripts start",
-    "server-dev": "nodemon server/bin/www/server.js",
-    "server": "pm2 start server/bin/www/server.js",
+    "server-dev": "nodemon server/server.js",
+    "server": "pm2 start server/server.js",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"

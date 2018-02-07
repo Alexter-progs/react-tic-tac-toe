@@ -1,4 +1,4 @@
-const express = require('./../../app');
+const express = require('./app');
 const http = require('http').Server(express);
 const dotenv = require('dotenv');
 const path = require('path');
