@@ -1,8 +1,10 @@
 .app-grid {
   display: grid;
+  grid-template-columns: 1fr 4fr;
   grid-template-areas: 
-  "game"
-  "chat";
+  "chat game";
 
   margin-top: 10px;
+  margin-left: 10px;
+  margin-right: 10px;
 }

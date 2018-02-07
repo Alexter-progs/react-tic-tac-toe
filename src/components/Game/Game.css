@@ -1,19 +1,20 @@
 .game {
     justify-self: center;
     grid-area: game;
-
-    background-color: #F6511D;
-
-    display: grid;
-    grid-gap: 1px;
-    grid-template-rows: repeat(3, 1fr);
-    grid-template-columns: repeat(3, 1fr);
+    background-color: #272727;
   }
 
+.game-grid {
+    display: grid;
+    grid-gap: 3px;
+    grid-template-rows: repeat(3, 1fr);
+    grid-template-columns: repeat(3, 1fr);
+}
+
 .cell {
-    background-color: #70C1B3;
-    width: 100px;
-    height: 100px;
+    background-color: #4C2C72;
+    width: 169px;
+    height: 169px;
     
     display: grid;
 }
