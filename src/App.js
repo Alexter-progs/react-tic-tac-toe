@@ -48,11 +48,6 @@ class App extends Component {
       
     });
 
-    // Emitting more to fill out socket.io buffer, otherwise it stalls for few seconds
-    setInterval(() => {
-      socket.emit('bla', 'lo');
-    }, 500);
-
     onPlayerJoined(() => {
       console.log('Second player is joined');
 
