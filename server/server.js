@@ -82,7 +82,9 @@ io.on('connection',(socket) => {
     })
 
     socket.on('disconnect', (reason) => {
-        console.log('User disconnected. Reason: ', reason)
+        console.log('User disconnected. Reason: ', reason);    
+
+        delete connections[socket.id];
     });
 });
 
