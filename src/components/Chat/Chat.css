@@ -21,12 +21,11 @@
     animation-duration: 1s;
 }
 
-
-
 .chat-input {
     display: grid;
     grid-template-columns: 80% 20%;
     align-self: end;
+    border-top: 5px #272727 solid;
 }
 
 .message-input-wrapper input {
@@ -65,5 +64,6 @@
     grid-template-rows: 10fr 1fr;
 
     background-color: #70C1B3;
+    border: 5px #272727 solid;
   }
 
