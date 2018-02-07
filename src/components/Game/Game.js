@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import './Game.css';
 
-import { socket, onEnemyStep, onGameOver } from '../../api';
+import { socket, onEnemyStep, onOponentDisconnect, onGameOver } from '../../api';
 
 class Game extends Component {
     constructor(props) {
@@ -20,14 +20,19 @@ class Game extends Component {
             const isTie = result === 'Tie';
             const isWinner = isTie ? false : me === result ? true : false
 
-            console.log(`Me: ${me}. result === Tie: ${isTie}. isWinner: ${isWinner}`);
-
             this.updateGrid(lastMove, true);
             this.setState({
                 isGameOver: true,
                 isTie,
                 isWinner
             });
+        })
+
+        onOponentDisconnect(() => {
+            this.setState({
+                isGameOver: true,
+                isOponentDisconnected: true
+            })
         })
 
         this.state = {
@@ -37,7 +42,8 @@ class Game extends Component {
                 0, 0, 0
             ],
             isStepLocked: props.isFirst ? false : true,
-            isGameOver: false
+            isGameOver: false,
+            isOponentDisconnected: false
         }
     }
 
@@ -84,7 +90,7 @@ class Game extends Component {
     }
 
     render() {
-        const { grid, isGameOver, isWinner, isTie } = this.state;
+        const { grid, isGameOver, isWinner, isOponentDisconnected, isTie } = this.state;
         const mark = this.props.isFirst ? 'X' : 'O';
         const enemyMark = mark === 'X' ? 'O' : 'X';
         const blank = '';
@@ -92,21 +98,27 @@ class Game extends Component {
         return (
             !isGameOver ? (
                 <div className="game">
-                {
-                    grid.map((cell, index) => {
-                        return (
-                            <div key={index} className="cell" onClick={() => this.handleStep(index)}>
-                                <span className="cell-text">
-                                    { cell === 1 ? mark : cell === -1 ? enemyMark : blank }
-                                </span>
-                            </div>
-                        )
-                    })
-                }
+                    <div className="game-grid">
+                    {
+                        grid.map((cell, index) => {
+                            return (
+                                <div key={index} className="cell" onClick={() => this.handleStep(index)}>
+                                    <span className="cell-text">
+                                        { cell === 1 ? mark : cell === -1 ? enemyMark : blank }
+                                    </span>
+                                </div>
+                            )
+                        })
+                    }
+                    </div>
                 </div>
             ) : (
                 <div>
-                    <p>{ isTie ? 'Draw' : isWinner ? 'You won' : 'You lost' }</p>
+                    { isOponentDisconnected ? (
+                        <p>Your oponent disconnected</p>
+                    ) : (
+                        <p>{ isTie ? 'Draw' : isWinner ? 'You won' : 'You lost' }</p>
+                    )}
                 </div>
             )
         );

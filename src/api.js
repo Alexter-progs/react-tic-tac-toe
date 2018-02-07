@@ -23,4 +23,8 @@ function onGameOver(cb) {
     socket.on('gameOver', cb);
 }
 
-export { onChatMessage, onConnect, onEnemyStep, onPlayerJoined, onGameOver, socket };
+function onOponentDisconnect(cb) {
+    socket.on('oponentDisconnected', cb);
+}
+
+export { onChatMessage, onConnect, onEnemyStep, onOponentDisconnect, onPlayerJoined, onGameOver, socket };

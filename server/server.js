@@ -27,6 +27,7 @@ io.on('connection',(socket) => {
             socket.join(room, (err) => {
                 if(!err) {
                     connections[socket.id].roomId = room;
+                    initializeGameData(room);
                     socket.broadcast.to(room).emit('playerJoined');
                 }
             });
@@ -48,23 +49,10 @@ io.on('connection',(socket) => {
 
         const room = connections[socket.id].roomId;
 
-        if(!gameData[room]) {
-            gameData[room] = {
-                grid: [
-                    0, 0, 0,
-                    0, 0, 0,
-                    0, 0, 0
-                ],
-                stepCount: 0
-            }
-        }
-
         gameData[room].stepCount = gameData[room].stepCount + 1;
         gameData[room].grid[cellIndex] = isCreator ? 1 : -1;
 
-        console.log(gameData[room].grid);
-
-        if(isWinCondition(gameData[room])) {
+        if(isWinCondition(gameData[room].grid)) {
             io.in(room).emit('gameOver', {
                 result: isCreator ? 'Creator' : 'JoinedUser',
                 lastMove: { cellIndex }
@@ -84,11 +72,35 @@ io.on('connection',(socket) => {
     socket.on('disconnect', (reason) => {
         console.log('User disconnected. Reason: ', reason);    
 
+        const room = connections[socket.id].roomId;
+
+        if(gameData[room]) {
+            const {grid, stepCount } = gameData[room];
+
+            if(!isWinCondition(grid) && stepCount !== 9) {
+                io.in(room).emit('oponentDisconnected');
+            }
+
+            delete gameData[room];
+        }
+        
         delete connections[socket.id];
     });
 });
 
-function isWinCondition({ grid, stepCount }) {
+function initializeGameData(room) {
+    gameData[room] = {
+        grid: [
+            0, 0, 0,
+            0, 0, 0,
+            0, 0, 0
+        ],
+        stepCount: 0
+    }
+}
+
+function isWinCondition(grid) {
+    console.log(grid);
     let winConditions = [
         [0, 1, 2],
         [3, 4, 5],
