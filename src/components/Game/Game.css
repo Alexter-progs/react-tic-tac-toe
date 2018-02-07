@@ -2,6 +2,7 @@
     justify-self: center;
     grid-area: game;
     background-color: #272727;
+    border: 10px #272727 solid;
   }
 
 .game-grid {
@@ -15,6 +16,9 @@
     background-color: #4C2C72;
     width: 169px;
     height: 169px;
+
+    font-size: 100px;
+    color: #F6511D;
     
     display: grid;
 }
