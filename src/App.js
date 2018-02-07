@@ -22,14 +22,9 @@ class App extends Component {
       shouldJoinRoom,
       connectionURL: `${HOST_URL}/chat/${roomId}`,
       roomId,
-      isFirst: false
+      isFirst: false,
+      isMyTurn: false
     }
-  }
-
-  state = {
-    shouldJoinRoom: false,
-    connectionURL: null,
-    roomId: null
   }
 
   componentWillMount() {
@@ -61,26 +56,29 @@ class App extends Component {
 
       this.setState({
         shouldJoinRoom: true,
-        isFirst: true
+        isFirst: true,
+        isMyTurn: true
       })
     })
+  }
 
-
+  onTurnChange(isMyTurn) {
+    this.setState({
+      isMyTurn
+    })
   }
 
   render() {
-    const { shouldJoinRoom, connectionURL, isFirst } = this.state;
+    const { shouldJoinRoom, connectionURL, isFirst, isMyTurn } = this.state;
+
 
     return (
       shouldJoinRoom ? (
         <div className="app-grid">
           <Chat/>
-          <div class="cross">
-            <div>Score: 1</div>
-          </div>
-          <Game isFirst={isFirst}/>
-          <div class="zero">
-            <div>Score: 2</div>
+          <Game isFirst={isFirst} onTurnChange={(isMyTurn) => this.onTurnChange(isMyTurn)}/>
+          <div class="turn">
+            <div className="turn">{isMyTurn ? 'Your turn' : 'Enemy turn'}</div>
           </div>
         </div>
       ) : (

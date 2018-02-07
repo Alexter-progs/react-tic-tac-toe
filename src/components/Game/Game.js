@@ -9,6 +9,7 @@ class Game extends Component {
 
         onEnemyStep(({cellIndex}) => {
             console.log(`Enemy stepped: ${cellIndex}`);
+            this.props.onTurnChange(true);
             this.updateGrid(cellIndex, true);
             this.setState(({
                 isStepLocked: false
@@ -66,6 +67,7 @@ class Game extends Component {
                 console.log(`Indeed Steped: ${cellIndex}`)
             });
 
+            this.props.onTurnChange(false);
             this.updateGrid(cellIndex, false);
 
             this.setState(({

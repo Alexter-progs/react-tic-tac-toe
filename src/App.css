@@ -1,24 +1,21 @@
 .app-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr 2fr 1fr;
+  grid-template-columns: 1fr 4fr;
   grid-template-rows: 5fr 1fr;
   grid-template-areas: 
-    "chat cross game zero"
-    "turn turn turn turn";
+    "chat game"
+    "turn turn";
 
   margin-top: 10px;
   margin-left: 10px;
   margin-right: 10px;
 }
 
-.cross {
-  grid-area: cross;
-  font-size: 30px;
+.turn {
+  grid-area: turn;
+  grid-column: 2/3;
+  align-self: center;
   justify-self: center;
-}
-
-.zero {
-  grid-area: zero;
-  font-size: 30px;
-  justify-self: center;
+  font-size: 50px;
+  color: #272727;
 }
