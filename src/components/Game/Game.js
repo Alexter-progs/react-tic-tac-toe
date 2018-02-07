@@ -57,7 +57,6 @@ class Game extends Component {
     }
 
     handleStep = (cellIndex) => {
-        const mark = this.props.isFirst ? 'X' : 'O';
         const { isStepLocked } = this.state;
 
         if(!isStepLocked && this.isNotAlreadyMarked(cellIndex)) {
