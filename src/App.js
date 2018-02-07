@@ -93,14 +93,14 @@ class App extends Component {
           <Game isFirst={isFirst} onTurnChange={(isMyTurn) => this.onTurnChange(isMyTurn)}/>
           {
             !isGameOver && !isPlayerDisconnected ? (
-              <div class="turn">
+              <div className="turn">
                 <div className="turn">{isMyTurn ? 'Your turn' : 'Enemy turn'}</div>
               </div>
             ) : ''
           }
         </div>
       ) : (
-        <div class="main-page">
+        <div className="main-page">
           <span className="content">Give this URL to your friend to play toogether
             <p>{connectionURL}</p>
           </span>

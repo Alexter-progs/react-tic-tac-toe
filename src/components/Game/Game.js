@@ -1,7 +1,11 @@
 import React, { Component } from 'react';
 import './Game.css';
+import ticAudio from '../../assets/sounds/tic.wav';
+import clickAudio from '../../assets/sounds/click.wav';
+import winAudio from '../../assets/sounds/win.wav';
+import loseAudio from '../../assets/sounds/lose.wav';
 
-import { socket, onEnemyStep, onOponentDisconnect, onGameOver } from '../../api';
+import { socket, onEnemyStep, onOponentDisconnect, onGameOver } from '../../api'; 
 
 class Game extends Component {
     constructor(props) {
@@ -13,7 +17,10 @@ class Game extends Component {
             this.updateGrid(cellIndex, true);
             this.setState(({
                 isStepLocked: false
-            }))
+            }));
+
+            let audio = new Audio(ticAudio);
+            audio.play();
         })
 
         onGameOver(({ result, lastMove}) => {
@@ -27,6 +34,10 @@ class Game extends Component {
                 isTie,
                 isWinner
             });
+
+            let audio = isTie ? winAudio : isWinner ? winAudio : loseAudio;
+            let gameOverSound = new Audio(audio);
+            gameOverSound.play();
         })
 
         onOponentDisconnect(() => {
@@ -66,6 +77,8 @@ class Game extends Component {
                 console.log(`Indeed Steped: ${cellIndex}`)
             });
 
+            let audio = new Audio(clickAudio);
+            audio.play();
             this.props.onTurnChange(false);
             this.updateGrid(cellIndex, false);
 
