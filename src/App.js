@@ -69,13 +69,18 @@ class App extends Component {
   render() {
     const { shouldJoinRoom, connectionURL, isFirst } = this.state;
 
-    console.log(isFirst);
-
     return (
       shouldJoinRoom ? (
         <div className="app-grid">
           <Chat/>
+          <div class="cross">
+            <div>Score: 1</div>
+          </div>
           <Game isFirst={isFirst}/>
+          <div class="zero">
+            <div>Score: 2</div>
+          </div>
+          <div class="turn">X turn</div>
         </div>
       ) : (
         <div>Give this URL to your friend to play toogether: <a href={connectionURL}>{connectionURL}</a></div>
