@@ -5,7 +5,7 @@ import './App.css';
 import uuid from 'uuid';
 
 import { getRoomFromUrl } from './utils/index'
-import { socket, onPlayerJoined } from './api';
+import { socket, onPlayerJoined, onGameOver, onOponentDisconnect } from './api';
 
 const HOST_URL = process.env.REACT_APP_HOST_URL + process.env.REACT_APP_DEV_SERVER_PORT
 
@@ -23,7 +23,9 @@ class App extends Component {
       connectionURL: `${HOST_URL}/chat/${roomId}`,
       roomId,
       isFirst: false,
-      isMyTurn: false
+      isMyTurn: false,
+      isGameOver: false,
+      isPlayerDisconnected: false
     }
   }
 
@@ -60,6 +62,18 @@ class App extends Component {
         isMyTurn: true
       })
     })
+
+    onOponentDisconnect(() => {
+      this.setState({
+        isPlayerDisconnected: true
+      })
+    })
+
+    onGameOver(() => {
+      this.setState({
+        isGameOver: true
+      })
+    })
   }
 
   onTurnChange(isMyTurn) {
@@ -69,7 +83,7 @@ class App extends Component {
   }
 
   render() {
-    const { shouldJoinRoom, connectionURL, isFirst, isMyTurn } = this.state;
+    const { shouldJoinRoom, connectionURL, isFirst, isMyTurn, isGameOver, isPlayerDisconnected } = this.state;
 
 
     return (
@@ -77,9 +91,13 @@ class App extends Component {
         <div className="app-grid">
           <Chat/>
           <Game isFirst={isFirst} onTurnChange={(isMyTurn) => this.onTurnChange(isMyTurn)}/>
-          <div class="turn">
-            <div className="turn">{isMyTurn ? 'Your turn' : 'Enemy turn'}</div>
-          </div>
+          {
+            !isGameOver && !isPlayerDisconnected ? (
+              <div class="turn">
+                <div className="turn">{isMyTurn ? 'Your turn' : 'Enemy turn'}</div>
+              </div>
+            ) : ''
+          }
         </div>
       ) : (
         <div>Give this URL to your friend to play toogether: <a href={connectionURL}>{connectionURL}</a></div>

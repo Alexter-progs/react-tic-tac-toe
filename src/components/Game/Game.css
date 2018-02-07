@@ -29,3 +29,11 @@
     justify-self: center;
 }
 
+.game-end {
+    grid-area: game;
+
+    justify-self: center;
+    align-self: center;
+    font-size: 50px;
+}
+

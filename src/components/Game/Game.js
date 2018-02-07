@@ -115,7 +115,7 @@ class Game extends Component {
                     </div>
                 </div>
             ) : (
-                <div>
+                <div className="game-end">
                     { isOponentDisconnected ? (
                         <p>Your oponent disconnected</p>
                     ) : (
