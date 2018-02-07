@@ -1,50 +1,65 @@
 import React, { Component } from 'react';
 import './Game.css';
 
-import { socket, onEnemyStep } from '../../api';
+import { socket, onEnemyStep, onGameOver } from '../../api';
 
 class Game extends Component {
     constructor(props) {
         super(props);
 
-        onEnemyStep(({ x, y }) => {
-            console.log(`Enemy stepped: ${x}, ${y}`);
-            this.updateGrid(x, y, true);
+        onEnemyStep(({cellIndex}) => {
+            console.log(`Enemy stepped: ${cellIndex}`);
+            this.updateGrid(cellIndex, true);
             this.setState(({
                 isStepLocked: false
             }))
         })
 
+        onGameOver(({ result, lastMove}) => {
+            const me = this.state.isCreator ? 'Creator' : 'JoinedUser';
+            const isTie = result === 'Tie';
+            const isWinner = isTie ? false : me === result ? true : false
+
+            this.updateGrid(lastMove, true);
+            this.setState({
+                isGameOver: true,
+                isTie,
+                isWinner
+            });
+        })
+
         this.state = {
             grid: [
-                [0, 0, 0],
-                [0, 0, 0],
-                [0, 0, 0]
+                0, 0, 0,
+                0, 0, 0,
+                0, 0, 0
             ],
-            isStepLocked: props.isFirst ? false : true
+            isStepLocked: props.isFirst ? false : true,
+            isGameOver: false
         }
     }
 
     componentWillReceiveProps(nextProp) {
         if(nextProp.isFirst !== this.props.isFirst) {
             this.setState(({
-                isStepLocked: nextProp.isFirst ? false : true
+                isStepLocked: nextProp.isFirst ? false : true,
+                isCreator: nextProp.isFirst ? true : false
             }));
         }
     }
 
-    handleStep = (x,y) => {
+    handleStep = (cellIndex) => {
         const mark = this.props.isFirst ? 'X' : 'O';
         const { isStepLocked } = this.state;
 
-        if(!isStepLocked && this.isNotAlreadyMarked(x, y)) {
-            console.log(`Steping: ${x}, ${y}`);
-            
-            socket.emit('step', { x, y }, () => {
-                console.log(`Indeed Steped: ${x}, ${y}`)
+        if(!isStepLocked && this.isNotAlreadyMarked(cellIndex)) {
+            console.log(`Steping: ${cellIndex}`);
+
+            socket.emit('step', { cellIndex, isCreator: this.props.isFirst }, () => {
+                console.log(`Indeed Steped: ${cellIndex}`)
             });
 
-            this.updateGrid(x, y, false);
+            this.updateGrid(cellIndex, false);
 
             this.setState(({
                 isStepLocked: true
@@ -52,17 +67,15 @@ class Game extends Component {
         }
     }
 
-    isNotAlreadyMarked = (x, y) => {
-        return this.state.grid[x][y] === 0;
+    isNotAlreadyMarked = (cellIndex) => {
+        return this.state.grid[cellIndex] === 0;
     }
 
-    updateGrid = (x, y, isEnemy) => {
+    updateGrid = (cellIndex, isEnemy) => {
         const { grid } = this.state;
         let updatedGrid = grid.slice();
-        let nestedArr = updatedGrid[x].slice();
 
-        nestedArr[y] = isEnemy ? -1 : 1;
-        updatedGrid[x] = nestedArr;
+        updatedGrid[cellIndex] = isEnemy ? -1 : 1;
 
         this.setState((state) => ({
             grid: updatedGrid
@@ -70,27 +83,31 @@ class Game extends Component {
     }
 
     render() {
-        const { grid } = this.state;
+        const { grid, isGameOver, isWinner, isTie } = this.state;
         const mark = this.props.isFirst ? 'X' : 'O';
         const enemyMark = mark === 'X' ? 'O' : 'X';
         const blank = '';
 
         return (
-            <div className="game">
+            !isGameOver ? (
+                <div className="game">
                 {
-                    grid.map((row, rowIndex) => {
-                        return row.map((cell, cellIndex) => {
-                            return (
-                                <div key={rowIndex + cellIndex} className="cell" onClick={() => this.handleStep(rowIndex, cellIndex)}>
-                                    <span className="cell-text">
-                                        { cell === 1 ? mark : cell === -1 ? enemyMark : blank }
-                                    </span>
-                                </div>
-                            )
-                        })
+                    grid.map((cell, index) => {
+                        return (
+                            <div key={index} className="cell" onClick={() => this.handleStep(index)}>
+                                <span className="cell-text">
+                                    { cell === 1 ? mark : cell === -1 ? enemyMark : blank }
+                                </span>
+                            </div>
+                        )
                     })
                 }
-            </div>
+                </div>
+            ) : (
+                <div>
+                    <p>{ isTie ? 'Draw' : isWinner ? 'You won' : 'You lost' }</p>
+                </div>
+            )
         );
     }
 }

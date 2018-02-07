@@ -19,4 +19,8 @@ function onEnemyStep(cb) {
     socket.on('enemyStep', cb);
 }
 
-export { onChatMessage, onConnect, onEnemyStep, onPlayerJoined, socket };
+function onGameOver(cb) {
+    socket.on('gameOver', cb);
+}
+
+export { onChatMessage, onConnect, onEnemyStep, onPlayerJoined, onGameOver, socket };

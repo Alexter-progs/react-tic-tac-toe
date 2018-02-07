@@ -15,6 +15,7 @@ http.listen(PORT, () => {
 });
 
 let connections = {};
+let gameData = {};
 
 io.on('connection',(socket) => {
     console.log('New user connected');
@@ -42,11 +43,41 @@ io.on('connection',(socket) => {
         socket.broadcast.to(room).emit('chatMessage', message);
     });
 
-    socket.on('step', ({x, y}, cb) => {
-        console.log(`Broadcasting step: ${x}, ${y}`);
+    socket.on('step', ({cellIndex, isCreator}, cb) => {
+        console.log(`Broadcasting step: ${cellIndex}`);
 
         const room = connections[socket.id].roomId;
-        socket.broadcast.to(room).emit('enemyStep', { x, y});
+
+        if(!gameData[room]) {
+            gameData[room] = {
+                grid: [
+                    0, 0, 0,
+                    0, 0, 0,
+                    0, 0, 0
+                ],
+                stepCount: 0
+            }
+        }
+
+        gameData[room].stepCount = gameData[room].stepCount + 1;
+        gameData[room].grid[cellIndex] = isCreator ? 1 : -1;
+
+        console.log(gameData[room].grid);
+
+        if(isWinCondition(gameData[room])) {
+            io.in(room).emit('gameOver', {
+                result: isCreator ? 'Creator' : 'JoinedUser',
+                lastMove: { cellIndex }
+            });
+        } else if(gameData[room].stepCount === 9){
+            io.in(room).emit('gameOver', {
+                result: 'Tie',
+                lastMove: { cellIndex }
+            });
+        } else {
+            socket.broadcast.to(room).emit('enemyStep', { cellIndex });
+        }
+
         cb();
     })
 
@@ -54,6 +85,27 @@ io.on('connection',(socket) => {
         console.log('User disconnected. Reason: ', reason)
     });
 });
+
+function isWinCondition({ grid, stepCount }) {
+    let winConditions = [
+        [0, 1, 2],
+        [3, 4, 5],
+        [6, 7, 8],
+        [0, 3, 6],
+        [1, 4, 7],
+        [2, 5, 8],
+        [0, 4, 8],
+        [2, 4, 6]
+    ]
+
+    return winConditions.some(condition => {
+        let summ = condition.reduce((prev, cellIndex) => {
+            return prev + grid[cellIndex]
+        }, 0);
+
+        return Math.abs(summ) === 3;
+    })
+}
 
 function isRoomFull(room) {
     let count = 0;
