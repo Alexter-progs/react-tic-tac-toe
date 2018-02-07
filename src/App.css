@@ -22,12 +22,3 @@
   font-size: 30px;
   justify-self: center;
 }
-
-.turn {
-  grid-area: turn;
-  grid-column: 3/4;
-  justify-self: center;
-  align-self: center;
-
-  font-size: 50px;
-}
