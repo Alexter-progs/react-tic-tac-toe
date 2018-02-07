@@ -8,7 +8,7 @@ app.get('/', (req, res) => {
     res.sendFile(path.resolve(__dirname, '..', 'build', 'index.html'));
 });
 
-app.get('/chat/:room', (req, res) => {
+app.get('/game/:room', (req, res) => {
     res.sendFile(path.resolve(__dirname, '..', 'build', 'index.html'));
 })
 
