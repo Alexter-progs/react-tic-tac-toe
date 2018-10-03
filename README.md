@@ -1,5 +1,7 @@
 ### tic-tac-toe
 
+This is a test assignment from Forsoft
+
 To get started: 
 
 - clone this project
